@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:run": "docker run -v $(pwd):/fool-proof -p 3000:3000 b0xercat/fool-proof"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
