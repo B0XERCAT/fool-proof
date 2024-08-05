@@ -7,6 +7,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 # Enable corepack to use pnpm
 RUN corepack enable
+RUN pnpm config set store-dir /pnpm/store/v3
 
 WORKDIR /fool-proof
 
