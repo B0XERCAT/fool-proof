@@ -1,0 +1,26 @@
+services:
+  front-end:
+    build: .
+    container_name: fool-proof-fe
+    ports:
+      - "3000:3000"
+    volumes:
+    # Add volumes to mount to container
+    # Changes in added volume in a local machine is mirrored at the container.
+    # ./<dir>:/fool-proof/<dir>, where dir is directory in local machine.
+      - ./app:/fool-proof/app
+      - ./components:/fool-proof/components
+      - ./lib:/fool-proof/lib
+      - ./components.json:/fool-proof/components.json
+      - ./next-env.d.ts:/fool-proof/next-env.d.ts
+      - ./next.config.mjs:/fool-proof/next.config.mjs
+      - ./postcss.config.mjs:/fool-proof/postcss.config.mjs
+      - ./tailwind.config.ts:/fool-proof/tailwind.config.ts
+      - ./tsconfig.json:/fool-proof/tsconfig.json
+
+    # Named volume so that empty directory is not created.
+    #  - node_modules:/fool-proof/node_modules
+
+# volumes:
+#   node_modules:
+#   next:
