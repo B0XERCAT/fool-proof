@@ -1,19 +1,48 @@
 services:
-  front-end:
-    build: .
-    container_name: fool-proof-fe
+  # Docker container run configuration for front end
+  client:
+    build: ./client
+    image: fool-proof-client:latest
+    container_name: fool-proof-client
     ports:
       - "3000:3000"
-    volumes:
-    # Add volumes to mount to container
-    # Changes in added volume in a local machine is mirrored at the container.
-    # ./<dir>:/fool-proof/<dir>, where dir is directory in local machine.
-      - ./app:/fool-proof/app
-      - ./components:/fool-proof/components
-      - ./lib:/fool-proof/lib
-      - ./components.json:/fool-proof/components.json
-      - ./next-env.d.ts:/fool-proof/next-env.d.ts
-      - ./next.config.mjs:/fool-proof/next.config.mjs
-      - ./postcss.config.mjs:/fool-proof/postcss.config.mjs
-      - ./tailwind.config.ts:/fool-proof/tailwind.config.ts
-      - ./tsconfig.json:/fool-proof/tsconfig.json
+    develop:
+      watch:
+        # sync when file in host file changes except for files in ignore.
+        - action: sync
+          path: ./client
+          target: /fool-proof
+          ignore: 
+            - node_modules/
+            - .next/
+        # rebuild when dependencies change
+        - action: rebuild
+          path: ./client/package.json
+        - action: rebuild
+          path: ./client/pnpm-lock.json
+        # sync and then restart when configs change
+        - action: sync+restart
+          path: ./client/next.config.json
+          target: /fool-proof/next.config.json
+        - action: sync+restart
+          path: ./client/postcss.config.mjs
+          target: /fool-proof/postcss.config.mjs
+        - action: sync+restart
+          path: ./client/tailwind.config.ts
+          target: /fool-proof/tailwind.config.ts
+        - action: sync+restart
+          path: ./client/tsconfig.json
+          target: /fool-proof/tsconfig.json
+        - action: sync+restart
+          path: ./client/components.json
+          target: /fool-proof/components.json
+  # Docker container run configuration for backend
+  server:
+    build: ./server
+    image: fool-proof-server:latest
+    container_name: fool-proof-server
+    develop:
+      watch:
+        - path: ./server
+          target: /fool-proof
+          action: sync
