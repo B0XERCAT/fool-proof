@@ -8,13 +8,34 @@ services:
       - "3000:3000"
     develop:
       watch:
-        - path: ./client
+        # sync when file in host file changes except for files in ignore.
+        - action: sync
+          path: ./client
           target: /fool-proof
-          action: sync
-        - path: ./client/package.json
-          action: rebuild
-        - path: ./client/pnpm-lock.json
-          action: rebuild
+          ignore: 
+            - ./client/node_modules
+            - ./client/.next
+        # rebuild when dependencies change
+        - action: rebuild
+          path: ./client/package.json
+        - action: rebuild
+          path: ./client/pnpm-lock.json
+        # sync and then restart when configs change
+        - action: sync+restart
+          path: ./client/next.config.json
+          target: /fool-proof/next.config.json
+        - action: sync+restart
+          path: ./client/postcss.config.mjs
+          target: /fool-proof/postcss.config.mjs
+        - action: sync+restart
+          path: ./client/tailwind.config.ts
+          target: /fool-proof/tailwind.config.ts
+        - action: sync+restart
+          path: ./client/tsconfig.json
+          target: /fool-proof/tsconfig.json
+        - action: sync+restart
+          path: ./client/components.json
+          target: /fool-proof/components.json
   # Docker container run configuration for backend
   server:
     build: ./server
