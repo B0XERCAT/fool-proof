@@ -13,8 +13,8 @@ services:
           path: ./client
           target: /fool-proof
           ignore: 
-            - ./client/node_modules
-            - ./client/.next
+            - node_modules/
+            - .next/
         # rebuild when dependencies change
         - action: rebuild
           path: ./client/package.json
