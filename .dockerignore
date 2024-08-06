@@ -1,5 +1,12 @@
-node_modules
+.next
+.pnpm-store
 .git
 .gitignore
-*.md
+.github
+.prettierrc
+.dockerignore
+Dockerfile
+docker-compose.yaml
+node_modules
 dist
+*.md
