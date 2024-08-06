@@ -5,6 +5,7 @@
 .github
 .prettierrc
 .dockerignore
+.eslintrc.json
 Dockerfile
 docker-compose.yaml
 node_modules
