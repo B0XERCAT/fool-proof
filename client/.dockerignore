@@ -1,8 +1,6 @@
 .next
 .pnpm-store
-.git
 .gitignore
-.github
 .prettierrc
 .dockerignore
 .eslintrc.json
