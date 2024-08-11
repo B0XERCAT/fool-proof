@@ -1,13 +1,15 @@
 FROM openjdk:17-jdk-alpine
 
-RUN addgroup -S spring && adduser -S spring -G spring
+# Run application as a non-root user.
+# RUN addgroup -S spring && adduser -S spring -G spring
+# USER spring:spring
 
-USER spring:spring
+CMD ["./gradlew", "clean", "build"]
 
-ARG DEPENDENCY=target/dependency
+ARG JAR_FILE=build/libs/*.jar
 
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
+COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","hello.Application"]
+EXPOSE 8080
+
+ENTRYPOINT ["java","-jar","/app.jar"]
