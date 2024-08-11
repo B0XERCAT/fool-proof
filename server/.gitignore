@@ -1,7 +1,9 @@
-build/
-
-### Gradle ###
+HELP.md
 .gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### STS ###
 .apt_generated
@@ -12,8 +14,8 @@ build/
 .springBeans
 .sts4-cache
 bin/
-src/main/**/bin/
-src/test/**/bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -24,8 +26,3 @@ src/test/**/bin/
 
 ### VS Code ###
 .vscode/
-
-.gitignore
-.dockerignore
-Dockerfile
-*.md
