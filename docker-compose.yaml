@@ -47,7 +47,7 @@ services:
       watch:
         - action: sync
           path: ./server/src
-          target: /fool-proof/src
+          target: /server/src
         - action: rebuild
           path: ./server/build.gradle
           
