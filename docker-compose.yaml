@@ -41,8 +41,14 @@ services:
     build: ./server
     image: fool-proof-server:latest
     container_name: fool-proof-server
+    ports:
+      - "8080:8080"
     develop:
       watch:
-        - path: ./server
-          target: /fool-proof
-          action: sync
+        - action: sync
+          path: ./server/src
+          target: /fool-proof/src
+        - action: rebuild
+          path: ./server/build.gradle
+          
+
