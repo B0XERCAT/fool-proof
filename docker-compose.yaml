@@ -41,8 +41,14 @@ services:
     build: ./server
     image: fool-proof-server:latest
     container_name: fool-proof-server
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
       - "8080:8080"
+    depends_on:
+      - database
     develop:
       watch:
         - action: sync
@@ -50,5 +56,18 @@ services:
           target: /server/src
         - action: rebuild
           path: ./server/build.gradle
+  # Docker container run configuration for database
+  database:
+    image: mysql:8.0
+    container_name: fool-proof-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   - ./database/var/lib/mysql:/var/lib/mysql
           
 
