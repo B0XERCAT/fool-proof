@@ -1,0 +1,31 @@
+spring:
+  devtools:
+    # Activate restart tool.
+    restart:
+      enabled: true
+      additional-paths: .
+      # .restart is trigger. If this changes, restart process starts.
+      trigger-file: .restart
+    # Activate live reload tool.
+    livereload:
+      enabled: true
+  # Set DB driver.
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    # Database settings.
+    show-sql: true
+    generate-ddl: false
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    # Hibernate settings.
+    hibernate:
+      # Set this to `create` when creating new table.
+      # Set this to `none` when adding new row to a table.
+      ddl-auto: none
+      naming:
+        # strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
