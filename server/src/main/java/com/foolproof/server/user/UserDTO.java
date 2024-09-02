@@ -1,6 +1,4 @@
-package com.foolproof.server.dto;
-
-import com.foolproof.server.domain.User;
+package com.foolproof.server.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

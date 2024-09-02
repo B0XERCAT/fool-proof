@@ -1,4 +1,4 @@
-package com.foolproof.server.domain;
+package com.foolproof.server.user;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
