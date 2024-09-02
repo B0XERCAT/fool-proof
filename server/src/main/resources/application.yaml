@@ -20,9 +20,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     # Hibernate settings.
     hibernate:
-      # Set this to `create` when creating new table.
-      # Set this to `none` when adding new row to a table.
-      ddl-auto: none
+      # Set `ddl-auto` to `create` when creating new table.
+      # Set `ddl-auto` to `update` when updating a table without deleting already existing row. 
+      # Set `ddl-auto` to `create-drop` during test case so that tables are dropped when application ends.
+      # Set `ddl-auto` to `validate` in production stage.
+      # Set `ddl-auto` to `none` for default, that is, none of the above.
+      ddl-auto: update
       naming:
         # strategy: org.hibernate.cfg.ImprovedNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
