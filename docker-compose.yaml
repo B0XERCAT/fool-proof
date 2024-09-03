@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      FOOLPROOF_BACKEND_URL: ${FOOLPROOF_BACKEND_URL}
+      NEXT_PUBLIC_BACKEND_API: ${NEXT_PUBLIC_BACKEND_API}
     develop:
       watch:
         # sync when file in host file changes except for files in ignore.
