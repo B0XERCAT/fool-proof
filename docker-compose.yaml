@@ -6,6 +6,8 @@ services:
     container_name: fool-proof-client
     ports:
       - "3000:3000"
+    environment:
+      FOOLPROOF_BACKEND_URL: ${FOOLPROOF_BACKEND_URL}
     develop:
       watch:
         # sync when file in host file changes except for files in ignore.
