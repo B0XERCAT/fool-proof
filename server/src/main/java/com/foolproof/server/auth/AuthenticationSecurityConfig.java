@@ -18,7 +18,7 @@ public class AuthenticationSecurityConfig {
                 (auth) -> auth
                     .requestMatchers("/").authenticated()
                     .requestMatchers("/api").permitAll()
-                    .anyRequest().autheticated()
+                    .anyRequest().authenticated()
             );
 
         return http.build();
