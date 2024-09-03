@@ -11,9 +11,11 @@ const LoginForm: React.FC = () => {
         setError('');
 
         const payload = { username, password };
+        
+        const login_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/login";
 
         try {
-            const response = await fetch('http://your-backend-server.com/login', {
+            const response = await fetch(login_api, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
