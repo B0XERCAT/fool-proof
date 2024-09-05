@@ -6,13 +6,20 @@ import org.springframework.core.env.Environment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.foolproof.global.jwt.JWTFilter;
+import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.LoginFilter;
 
 
 @Configuration
@@ -23,9 +30,17 @@ public class SecurityConfig {
     private Environment env;
 
     private final String FRONTEND_URL;
+    private final JWTUtil jwtUtil;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(@Value("${SPRING_FRONTEND_URL}") String frontendUrl) {
-        FRONTEND_URL = frontendUrl;
+    public SecurityConfig(
+        @Value("${SPRING_FRONTEND_URL}") String frontendUrl, 
+        AuthenticationConfiguration authenticationConfiguration,
+        JWTUtil jwtUtil
+    ) {
+        this.FRONTEND_URL = frontendUrl;
+        this.authenticationConfiguration = authenticationConfiguration;
+        this.jwtUtil = jwtUtil;
     }
 
     @Bean   
@@ -34,7 +49,19 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        LoginFilter loginFilter = new LoginFilter(
+            authenticationManager(authenticationConfiguration), 
+            jwtUtil
+        );
+
+        JWTFilter jwtFilter = new JWTFilter(jwtUtil);
+
         http
             // CSRF disable
             .csrf((auth) -> auth
@@ -56,11 +83,21 @@ public class SecurityConfig {
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+            // Add custom UsernamePasswordAuthenticationFilter due to disabling form login method
+            .addFilterAt(
+                loginFilter,
+                UsernamePasswordAuthenticationFilter.class
+            )
+            // Add JWT validation filter
+            .addFilterBefore(
+               jwtFilter,
+                LoginFilter.class
+            )
             // Authorize by path
             .authorizeHttpRequests(
                 (auth) -> auth
                     .requestMatchers("/").authenticated()
-                    .requestMatchers("/api/**").permitAll()
+                    .requestMatchers("/login", "/join").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             );
