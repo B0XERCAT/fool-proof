@@ -18,12 +18,61 @@ import org.springframework.core.env.Environment;
 @RestController
 @RequestMapping("/api")
 public class UserApiController {
-    private final UserService userService;
+    
+    private final UserJoinService userJoinService;
 
     @PostMapping("/join")
-    public ResponseEntity<User> addUser(@RequestBody UserJoinDTO request) {
-        User savedUser = userService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(savedUser);
+    public ResponseEntity<UserJoinResult> addUser(@RequestBody UserJoinDTO request) {
+        Boolean saveSuccess = userJoinService.save(request);
+        UserJoinResult result = new UserJoinResult(request.getUsername(), saveSuccess, !saveSuccess);
+        if (saveSuccess)
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(result);
+        else
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(result);
+    }
+}
+
+class UserJoinResult {
+    private String username;
+    private Boolean joinStatus;
+    private Boolean isDuplicate;
+
+    public UserJoinResult() {
+
+    }
+
+    public UserJoinResult(String username, Boolean joinStatus, Boolean isDuplicate) {
+        this.username = username;
+        this.joinStatus = joinStatus;
+        this.isDuplicate = isDuplicate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean getJoinStatus() {
+        return joinStatus;
+    }
+
+    public void setJoinStatus(Boolean joinStatus) {
+        this.joinStatus = joinStatus;
+    }
+
+
+    public Boolean getIsDuplicate() {
+        return isDuplicate;
+    }
+
+    public void setIsDuplicate(Boolean isDuplicate) {
+        this.isDuplicate = isDuplicate;
     }
 }
