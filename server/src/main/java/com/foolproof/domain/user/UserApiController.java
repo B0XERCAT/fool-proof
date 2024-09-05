@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foolproof.domain.user.dto.UserJoinDTO;
+import com.foolproof.domain.user.service.UserJoinService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,13 +18,13 @@ import org.springframework.core.env.Environment;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@ResponseBody
 public class UserApiController {
     
     private final UserJoinService userJoinService;
 
     @PostMapping("/join")
-    public ResponseEntity<UserJoinResult> addUser(@RequestBody UserJoinDTO request) {
+    public ResponseEntity<UserJoinResult> addUser(UserJoinDTO request) {
         Boolean saveSuccess = userJoinService.save(request);
         UserJoinResult result = new UserJoinResult(request.getUsername(), saveSuccess, !saveSuccess);
         if (saveSuccess)
