@@ -14,6 +14,8 @@ const LoginForm: React.FC = () => {
         
         const login_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/login";
 
+        console.log("Sending POST to ", login_api);
+
         try {
             const response = await fetch(login_api, {
                 method: 'POST',
@@ -32,6 +34,35 @@ const LoginForm: React.FC = () => {
             alert('Login successful');
         } catch (error) {
             setError(error.message);
+        }
+    };
+
+    const handleJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setError('');
+
+        const payload = { username, password };
+
+        const join_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/join";
+
+        console.log("Sending POST to ", join_api);
+
+        try {
+            const response = await fetch(join_api, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('Join failed');
+            }
+
+            alert('Join successful');
+        } catch (error) {
+            setError((error as Error).message);
         }
     };
 
@@ -60,6 +91,7 @@ const LoginForm: React.FC = () => {
                     />
                 </div>
                 <button type="submit">Login</button>
+                <button onClick={handleJoin} type="button">Join</button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
         </div>
