@@ -25,8 +25,6 @@ public class SecurityConfig {
     @Autowired
     private Environment env;
 
-    // private final String FRONTEND_URL = env.getProperty("FRONTEND_URL");
-    // @Value("${SPRING_FRONTEND_URL}")
     private final String FRONTEND_URL;
 
     public SecurityConfig(@Value("${SPRING_FRONTEND_URL}") String frontendUrl) {
