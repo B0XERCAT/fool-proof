@@ -10,7 +10,9 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
-        const payload = { username, password };
+        const formData = new FormData();
+        formData.append("username", username);
+        formData.append("password", password)
         
         const login_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/login";
 
@@ -19,10 +21,7 @@ const LoginForm: React.FC = () => {
         try {
             const response = await fetch(login_api, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+                body: formData
             });
 
             if (!response.ok) {
@@ -41,7 +40,9 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
-        const payload = { username, password };
+        const formData = new FormData();
+        formData.append("username", username);
+        formData.append("password", password)
 
         const join_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/join";
 
@@ -50,10 +51,7 @@ const LoginForm: React.FC = () => {
         try {
             const response = await fetch(join_api, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+                body: formData
             });
 
             if (!response.ok) {
