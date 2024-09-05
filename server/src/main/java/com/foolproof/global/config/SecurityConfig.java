@@ -1,8 +1,5 @@
 package com.foolproof.global.config;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.*;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -67,15 +64,6 @@ public class SecurityConfig {
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             );
-
-        // http
-        //     .formLogin(
-        //         (auth) -> auth
-        //             .loginPage( + "/temp/login")
-        //             .loginProcessingUrl("/api/login")
-        //             .permitAll()
-        //             .defaultSuccessUrl()A
-        //     );
 
         return http.build();
     }
