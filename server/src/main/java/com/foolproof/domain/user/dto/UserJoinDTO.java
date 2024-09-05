@@ -6,11 +6,13 @@ import com.foolproof.domain.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class UserJoinDTO {
     private String username;
     private String password;
