@@ -10,12 +10,20 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserJoinService {
     
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User save(UserJoinDTO request) {
-        return userRepository.save(request.toEntity(bCryptPasswordEncoder));
+    public Boolean save(UserJoinDTO request) {
+
+        Boolean userExists = userRepository.existsByUsername(request.getUsername());
+
+        if (userExists) 
+            return false;
+
+        userRepository.save(request.toEntity(bCryptPasswordEncoder));
+        
+        return true;
     }
 }
