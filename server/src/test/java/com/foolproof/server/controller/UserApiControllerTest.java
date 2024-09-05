@@ -13,9 +13,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foolproof.server.domain.User;
-import com.foolproof.server.dto.UserDTO;
-import com.foolproof.server.repository.UserRepository;
+import com.foolproof.global.domain.User;
+import com.foolproof.global.dto.UserDTO;
+import com.foolproof.global.repository.UserRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcBuilders.status;
 

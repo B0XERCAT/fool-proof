@@ -1,7 +1,7 @@
-package com.foolproof.server.user;
+package com.foolproof.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
+    
 }
