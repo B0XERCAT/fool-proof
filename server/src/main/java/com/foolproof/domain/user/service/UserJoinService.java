@@ -1,8 +1,9 @@
-package com.foolproof.domain.user;
+package com.foolproof.domain.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.foolproof.domain.user.UserRepository;
 import com.foolproof.domain.user.dto.UserJoinDTO;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
