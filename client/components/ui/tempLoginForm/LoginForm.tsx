@@ -16,8 +16,6 @@ const LoginForm: React.FC = () => {
         
         const login_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/login";
 
-        console.log("Sending POST to ", login_api);
-
         try {
             const response = await fetch(login_api, {
                 method: 'POST',
@@ -45,8 +43,6 @@ const LoginForm: React.FC = () => {
         formData.append("password", password)
 
         const join_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/join";
-
-        console.log("Sending POST to ", join_api);
 
         try {
             const response = await fetch(join_api, {
