@@ -18,6 +18,9 @@ public class JWTUtil {
 
     private final SecretKey secretKey;
 
+    // Change when needed.
+    private final Long EXPIREDMS = 60 * 60 * 10L;
+
     public JWTUtil(@Value("${SPRING_JWT_SECRET}") String secretKey) {
         this.secretKey = new SecretKeySpec(
             secretKey.getBytes(StandardCharsets.UTF_8),
@@ -56,10 +59,10 @@ public class JWTUtil {
             .before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(String username, String role) {
         Long curTimeMils = System.currentTimeMillis();
         Date curTime = new Date(curTimeMils);
-        Date expTime = new Date(curTimeMils + expiredMs);
+        Date expTime = new Date(curTimeMils + EXPIREDMS);
         return Jwts.builder()
             .claim("username", username)
             .claim("role", role)
