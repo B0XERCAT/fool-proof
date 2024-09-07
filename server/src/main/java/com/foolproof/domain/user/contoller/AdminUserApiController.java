@@ -1,4 +1,4 @@
-package com.foolproof.domain.admin;
+package com.foolproof.domain.user.controller;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @ResponseBody
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminUserApiController {
     
     @GetMapping("/test")
     public String getTest() {
