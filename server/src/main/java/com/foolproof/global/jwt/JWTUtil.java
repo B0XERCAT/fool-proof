@@ -4,6 +4,7 @@ import static java.util.Collections.rotate;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -17,9 +18,7 @@ import io.jsonwebtoken.Jwts;
 public class JWTUtil {
 
     private final SecretKey secretKey;
-
-    // Change when needed.
-    private final Long EXPIREDMS = 60 * 60 * 10L;
+    private final HashMap<String, Long> expiredMsMap = new HashMap<>();
 
     public JWTUtil(@Value("${SPRING_JWT_SECRET}") String secretKey) {
         this.secretKey = new SecretKeySpec(
@@ -29,6 +28,17 @@ public class JWTUtil {
                 .build()
                 .getAlgorithm()
         );
+        this.expiredMsMap.put("access", 60 * 10 * 1000L);
+        this.expiredMsMap.put("refresh", 24 * 60 * 60 * 1000L);
+    }
+
+    public String getCategory(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("category", String.class);
     }
 
     public String getUsername(String token) {
@@ -59,11 +69,13 @@ public class JWTUtil {
             .before(new Date());
     }
 
-    public String createJwt(String username, String role) {
+    public String createJwt(String category, String username, String role) {
         Long curTimeMils = System.currentTimeMillis();
+        Long expiredMs = expiredMsMap.get(category);
         Date curTime = new Date(curTimeMils);
-        Date expTime = new Date(curTimeMils + EXPIREDMS);
+        Date expTime = new Date(curTimeMils + expiredMs);
         return Jwts.builder()
+            .claim("category", category)
             .claim("username", username)
             .claim("role", role)
             .issuedAt(curTime)

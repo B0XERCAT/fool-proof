@@ -1,8 +1,10 @@
 package com.foolproof.global.handler.authentication;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,22 +29,33 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         // Change Exeption raised by the class later on.
 
         // Write custom authentication success logic down below.
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        String username = userDetails.getUsername();
-
-        // Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        // Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        // GrantedAuthority auth = iterator.next();
-        // String role = auth.getAuthority();
+        
+        // Get username from authentication instance.
+        String username = authentication.getName();
+        
+        // Get role of user from authentication instance
         String role = authentication
-            .getAuthorities()
-            .iterator()
-            .next()
+            .getAuthorities()  // Returns instance of `Collection<? extends GrantedAuthority>`
+            .iterator()        // Returns instance of `Iterator<? extends GrantedAuthority>`
+            .next()            // Returns instance of `GrantedAuthority`
             .getAuthority();
 
-        String token = jwtUtil.createJwt(username, role);
+        // Generate JWTs
+        String accessToken = jwtUtil.createJwt("access", username, role);
+        String refreshToken = jwtUtil.createJwt("refresh", username, role);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        // Generate response
+        response.setHeader("access", accessToken);
+        response.addCookie(createCookie("refresh", refreshToken));
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    public Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24 * 60 * 60);
+        // cookie.setSecure(true);
+        // cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 }
