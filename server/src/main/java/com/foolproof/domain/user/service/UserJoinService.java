@@ -9,8 +9,8 @@ import com.foolproof.domain.user.dto.UserJoinDTO;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserJoinService {
     
     private final UserRepository userRepository;
