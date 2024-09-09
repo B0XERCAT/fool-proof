@@ -1,4 +1,4 @@
-package com.foolproof.global.jwt;
+package com.foolproof.global.jwt.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.foolproof.domain.user.User;
 import com.foolproof.domain.user.dto.CustomUserDetails;
+import com.foolproof.global.jwt.JWTUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.foolproof.global.jwt;
+package com.foolproof.global.jwt.filter;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -12,12 +12,9 @@ import com.foolproof.global.jwt.JWTUtil;
 import com.foolproof.global.handler.authentication.FailureHandler;
 import com.foolproof.global.handler.authentication.SuccessHandler;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
