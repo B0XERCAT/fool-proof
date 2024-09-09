@@ -37,18 +37,30 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{
         HttpServletRequest request, 
         HttpServletResponse response
     ) throws AuthenticationException {
+        // Parse raw JSON file.
         UserDTO parsedUserData = parseUserData(request);
 
+        // Create authentication token to validate.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
             parsedUserData.getUsername(),
             parsedUserData.getPassword(),
             null
         );
 
+        // Authenticate.
         return getAuthenticationManager().authenticate(authToken);
     }
 
     public UserDTO parseUserData(HttpServletRequest request) throws RuntimeException{
+        /* Returns an instance of UserDTO from raw JSON POST request from the frontend server.
+         * If login request from the front server does not have required fields, throws
+         * RuntimeExeption.
+         * 
+         * @param request       HttpServeletRequest instance from the frontend server 
+         *                      require to be parsed.
+         * @return              Returns an instance of UserDTO class with parsed username
+         *                      and password information from input request.
+         */
         try {
             return objectMapper.readValue(
                 request.getInputStream(), 
