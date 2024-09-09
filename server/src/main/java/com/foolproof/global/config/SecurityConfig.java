@@ -1,8 +1,8 @@
 package com.foolproof.global.config;
 
-import com.foolproof.global.jwt.JWTFilter;
 import com.foolproof.global.jwt.JWTUtil;
-import com.foolproof.global.jwt.LoginFilter;
+import com.foolproof.global.jwt.filter.JWTFilter;
+import com.foolproof.global.jwt.filter.LoginFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,7 +81,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 (auth) -> auth
                     .requestMatchers("/").authenticated()
-                    .requestMatchers("/login", "/join").permitAll()
+                    .requestMatchers("/login", "/join", "/reissue").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             );
