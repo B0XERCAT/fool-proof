@@ -1,6 +1,5 @@
 package com.foolproof.domain.user.controller;
 
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@ResponseBody
 @RequestMapping("/admin")
 public class AdminUserApiController {
     
