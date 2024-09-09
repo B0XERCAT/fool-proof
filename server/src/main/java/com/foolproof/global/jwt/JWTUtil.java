@@ -1,7 +1,5 @@
 package com.foolproof.global.jwt;
 
-import static java.util.Collections.rotate;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +35,7 @@ public class JWTUtil {
     public String getCategory(String token) {
         try {
             return Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -52,7 +50,7 @@ public class JWTUtil {
     public String getUsername(String token) {
         try {
             return Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -67,7 +65,7 @@ public class JWTUtil {
     public String getRole(String token) {
         try {
             return Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -82,7 +80,7 @@ public class JWTUtil {
     public Boolean isExpired(String token) {
         try {
             return Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
                 // Throws ExpiredJwtException if the token is expired.
                 .parseSignedClaims(token)
