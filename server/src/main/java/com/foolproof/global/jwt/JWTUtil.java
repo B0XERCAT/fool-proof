@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 public class JWTUtil {
@@ -33,40 +35,68 @@ public class JWTUtil {
     }
 
     public String getCategory(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get("category", String.class);
+        try {
+            return Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("category", String.class);
+        } catch (JwtException e) {
+            // Change logging method later.
+            System.out.println("Jwt is invalid: " + e.getMessage());
+            return null;
+        }
     }
 
     public String getUsername(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get("username", String.class);
+        try {
+            return Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("username", String.class);
+        } catch (JwtException e) {
+            // Change logging method later.
+            System.out.println("Jwt is invalid: " + e.getMessage());
+            return null;
+        }
     }
 
     public String getRole(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get("role", String.class);
+        try {
+            return Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
+        } catch (JwtException e) {
+            // Change logging method later.
+            System.out.println("Jwt is invalid: " + e.getMessage());
+            return null;
+        }
     }
 
     public Boolean isExpired(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .getExpiration()
-            .before(new Date());
+        try {
+            return Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                // Throws ExpiredJwtException if the token is expired.
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration()
+                .before(new Date());
+        } catch (ExpiredJwtException e) {
+            // Change logging method later.
+            System.out.println("Jwt has expired: " + e.getMessage());
+        } catch (JwtException e) {
+            // Change logging method later.
+            System.out.println("Jwt is invalid: " + e.getMessage());
+        }
+        return false;
     }
 
     public String createJwt(String category, String username, String role) {
