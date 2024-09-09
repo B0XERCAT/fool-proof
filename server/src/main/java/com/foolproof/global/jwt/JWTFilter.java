@@ -1,6 +1,7 @@
 package com.foolproof.global.jwt;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,34 +30,50 @@ public class JWTFilter extends OncePerRequestFilter{
         HttpServletResponse response, 
         FilterChain filterChain
     ) throws ServletException, IOException {
-        // Find Authrization header
-        String authorization = request.getHeader("Authorization");
+        // Find access token from header.
+        String accessToken = request.getHeader("access");
 
-        // Validate Authorization header
-        if (authorization == null ||!authorization.startsWith("Bearer ")) {
-            System.out.println("TOKEN NULL");
+        // Verify non-empty access token
+        if (accessToken == null) {
+            // Add logging.
+
+            // Go to next filter.
             filterChain.doFilter(request, response);
             return;
         }
-
-        // Get JWT token
-        String token = authorization.split(" ")[1];
 
         // Validate expiration time of JWT
-        if (jwtUtil.isExpired(token)) {
-            System.out.println("TOKEN EXPIRED");
-            filterChain.doFilter(request, response);
+        // Does not go to next filter when access token is expired. 
+        if (jwtUtil.isExpired(accessToken)) {
+            // Write to response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired.");
+
+            // Raise response status
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        // Check if the token is access token.
+        // Does not go to next filter when access token is not access. 
+        String category = jwtUtil.getCategory(accessToken);
+        if (!category.equals("access")) {
 
+            // Write to response body.
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+        
+            // Raise response status
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        // Create CustomUserDetails instance from information in jwt.
         CustomUserDetails userDetails = new CustomUserDetails(
             User.builder()
-                .username(username)
+                .username(jwtUtil.getUsername(accessToken))
                 .password("placeholder")
-                .role(role)
+                .role(jwtUtil.getRole(accessToken))
                 .build()
         );
 
