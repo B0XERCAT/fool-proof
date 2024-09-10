@@ -29,9 +29,17 @@ public class ReissueController {
         HttpStatus httpStatus = reissueService.raiseHttpStatus(status);
         
         if (status == ReissueStatus.TOKEN_VALID) {
+            // Reissue new access token to header
             response.addHeader(
                 "access",
                 reissueService.getNewAccessToken(refresh)
+            );
+            // Rotate refresh token to cookie
+            response.addCookie(
+                (Cookie) reissueService.getNewRefreshToken(
+                    refresh,
+                    true
+                )
             );
         }
         

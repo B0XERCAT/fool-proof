@@ -3,6 +3,8 @@ package com.foolproof.global.jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.Cookie;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,6 +34,31 @@ public class ReissueService {
             jwtUtil.getUsername(refresh),
             jwtUtil.getRole(refresh)
         );
+    }
+
+    public String getNewRefreshToken(String refresh) {
+        return jwtUtil.createJwt(
+            "refresh",
+            jwtUtil.getUsername(refresh),
+            jwtUtil.getRole(refresh)
+        );
+    }
+
+    public Object getNewRefreshToken(String refresh, Boolean asCookie) {
+        String token = getNewRefreshToken(refresh);
+        if (asCookie){
+            Cookie cookie = new Cookie(
+                "refresh", 
+                token
+            );
+            cookie.setMaxAge(24 * 60 * 60);
+            // cookie.setSecure(true);
+            // cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            return cookie;
+        } else {
+            return token;
+        }
     }
 
     public String generateMessage(ReissueStatus status) {
