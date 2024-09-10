@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foolproof.domain.user.dto.UserDTO;
-import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.JwtUtil;
 import com.foolproof.global.jwt.RefreshTokenRepository;
 import com.foolproof.global.handler.authentication.FailureHandler;
 import com.foolproof.global.handler.authentication.SuccessHandler;
@@ -26,7 +26,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{
 
     public LoginFilter(
         AuthenticationManager authenticationManager, 
-        JWTUtil jwtUtil, 
+        JwtUtil jwtUtil, 
         RefreshTokenRepository refreshTokenRepository
     ) {
         setAuthenticationManager(authenticationManager);

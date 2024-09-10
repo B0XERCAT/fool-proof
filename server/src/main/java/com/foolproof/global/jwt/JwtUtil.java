@@ -15,12 +15,12 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
-public class JWTUtil {
+public class JwtUtil {
 
     private final SecretKey secretKey;
     private final HashMap<String, Long> expiredMsMap = new HashMap<>();
 
-    public JWTUtil(@Value("${SPRING_JWT_SECRET}") String secretKey) {
+    public JwtUtil(@Value("${SPRING_JWT_SECRET}") String secretKey) {
         this.secretKey = new SecretKeySpec(
             secretKey.getBytes(StandardCharsets.UTF_8),
             Jwts.SIG.HS256

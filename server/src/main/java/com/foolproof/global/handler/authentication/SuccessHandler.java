@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 
-import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.JwtUtil;
 import com.foolproof.global.jwt.RefreshToken;
 import com.foolproof.global.jwt.RefreshTokenRepository;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     
     @Override

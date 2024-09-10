@@ -1,8 +1,8 @@
 package com.foolproof.global.config;
 
-import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.JwtUtil;
 import com.foolproof.global.jwt.RefreshTokenRepository;
-import com.foolproof.global.jwt.filter.JWTFilter;
+import com.foolproof.global.jwt.filter.JwtFilter;
 import com.foolproof.global.jwt.filter.LoginFilter;
 
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CorsConfigurationSource corsConfig;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -47,7 +47,7 @@ public class SecurityConfig {
             refreshTokenRepository
         );
 
-        JWTFilter jwtFilter = new JWTFilter(jwtUtil);
+        JwtFilter jwtFilter = new JwtFilter(jwtUtil);
 
         http
             // CSRF disable

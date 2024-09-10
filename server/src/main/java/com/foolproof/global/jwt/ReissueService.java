@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ReissueService {
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
     public ReissueStatus validateToken(String refresh) {

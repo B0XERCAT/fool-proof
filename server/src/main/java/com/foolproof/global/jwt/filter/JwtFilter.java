@@ -10,7 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.foolproof.domain.user.User;
 import com.foolproof.domain.user.dto.CustomUserDetails;
-import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +21,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JWTFilter extends OncePerRequestFilter{
+public class JwtFilter extends OncePerRequestFilter{
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(
