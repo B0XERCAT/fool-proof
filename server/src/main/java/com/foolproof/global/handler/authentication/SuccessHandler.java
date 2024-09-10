@@ -10,8 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 
-import com.foolproof.domain.user.dto.CustomUserDetails;
 import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.RefreshToken;
+import com.foolproof.global.jwt.RefreshTokenRepository;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
     
     @Override
     public void onAuthenticationSuccess(
@@ -43,6 +45,14 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         // Generate JWTs
         String accessToken = jwtUtil.createJwt("access", username, role);
         String refreshToken = jwtUtil.createJwt("refresh", username, role);
+
+        refreshTokenRepository.save(
+            RefreshToken
+                .builder()
+                .refresh(refreshToken)
+                .username(username)
+                .build()
+        );
 
         // Generate response
         response.setHeader("access", accessToken);

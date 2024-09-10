@@ -4,13 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.Cookie;
-
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ReissueService {
     private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public ReissueStatus validateToken(String refresh) {
         if (refresh == null) {
@@ -24,11 +25,44 @@ public class ReissueService {
         if (!jwtUtil.getCategory(refresh).equals("refresh")) {
             return ReissueStatus.TOKEN_NOT_REFRESH;
         }
+        if (!refreshTokenRepository.existsByRefreshToken(refresh)) {
+            return ReissueStatus.TOKEN_ABSENT;
+        }
 
         return ReissueStatus.TOKEN_VALID;
     }
 
+    public void onSuccess(HttpServletResponse response, String refresh) {
+        String username = jwtUtil.getUsername(refresh);
+        String role = jwtUtil.getRole(refresh);
+        // Reissue new access token to header
+        response.setHeader(
+            "access",
+            getNewAccessToken(
+                username,
+                role
+            )
+        );
+        // Rotate refresh token to cookie
+        response.addCookie(
+            (Cookie) getNewRefreshToken(
+                username,
+                role,
+                true
+            )
+        );
+        deleteByRefreshToken(refresh);
+        addRefreshToken(refresh);
+    }
+
     public String getNewAccessToken(String refresh) {
+        /* Get String representation of newly created access token
+         * from already existing refresh token.
+         * 
+         * @param refresh String representation of old refresh token.
+         * 
+         * @return        String representation of new access token.
+         */
         return jwtUtil.createJwt(
             "access",
             jwtUtil.getUsername(refresh),
@@ -36,11 +70,50 @@ public class ReissueService {
         );
     }
 
+    public String getNewAccessToken(String username, String role) {
+        /* Get String representation of newly created access token
+         * from username and role.
+         * 
+         * @param username String representation of username.
+         * @param role     String representation of role.
+         * 
+         * @return         String representation of new access token.
+         */
+        return jwtUtil.createJwt(
+            "access", 
+            username, 
+            role
+        );
+    }
+
     public String getNewRefreshToken(String refresh) {
+        /* Get String representation of newly created refresh token
+         * from already existing refresh token.
+         * 
+         * @param refresh String representation of old refresh token.
+         * 
+         * @return        String representation of new refresh token.
+         */
         return jwtUtil.createJwt(
             "refresh",
             jwtUtil.getUsername(refresh),
             jwtUtil.getRole(refresh)
+        );
+    }
+
+    public String getNewRefreshToken(String username, String role) {
+        /* Get String representation of newly created refresh token
+         * from username and role.
+         * 
+         * @param username String representation of username.
+         * @param role     String representation of role.
+         * 
+         * @return         String representation of new refresh token.
+         */
+        return jwtUtil.createJwt(
+            "refresh",
+            username,
+            role
         );
     }
 
@@ -61,6 +134,38 @@ public class ReissueService {
         }
     }
 
+    
+    public Object getNewRefreshToken(String username, String role, Boolean asCookie) {
+        String token = getNewRefreshToken(username, role);
+        if (asCookie){
+            Cookie cookie = new Cookie(
+                "refresh", 
+                token
+            );
+            cookie.setMaxAge(24 * 60 * 60);
+            // cookie.setSecure(true);
+            // cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            return cookie;
+        } else {
+            return token;
+        }
+    }
+
+    public void deleteByRefreshToken(String refresh) {
+        refreshTokenRepository.deleteByRefreshToken(refresh);
+    }
+
+    public void addRefreshToken(String refresh) {
+        refreshTokenRepository.save(
+            RefreshToken
+                .builder()
+                .refresh(refresh)
+                .username(jwtUtil.getUsername(refresh))
+                .build()
+        );
+    }
+
     public String generateMessage(ReissueStatus status) {
         switch (status) {
             case TOKEN_VALID:
@@ -71,6 +176,8 @@ public class ReissueService {
                 return "Refresh token expired.";
             case TOKEN_NOT_REFRESH:
                 return "Token not refresh.";
+            case TOKEN_ABSENT:
+                return "Token does not exist in Redis DB.";
             default:
                 return "Unknown token invalidation.";
         }

@@ -1,6 +1,7 @@
 package com.foolproof.global.config;
 
 import com.foolproof.global.jwt.JWTUtil;
+import com.foolproof.global.jwt.RefreshTokenRepository;
 import com.foolproof.global.jwt.filter.JWTFilter;
 import com.foolproof.global.jwt.filter.LoginFilter;
 
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CorsConfigurationSource corsConfig;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean   
     public BCryptPasswordEncoder passwordEncoder() {
@@ -41,7 +43,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(
             authenticationManager(authenticationConfiguration),
-            jwtUtil
+            jwtUtil,
+            refreshTokenRepository
         );
 
         JWTFilter jwtFilter = new JWTFilter(jwtUtil);
