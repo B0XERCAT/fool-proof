@@ -8,15 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 
-import com.foolproof.global.jwt.JWTUtil;
-
 import java.io.IOException;
 
 @RequiredArgsConstructor
 public class FailureHandler implements AuthenticationFailureHandler {
-
-    private final JWTUtil jwtUtil;
-
     @Override
     public void onAuthenticationFailure(
         HttpServletRequest request, 

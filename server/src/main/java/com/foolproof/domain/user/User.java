@@ -3,12 +3,10 @@ package com.foolproof.domain.user;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
