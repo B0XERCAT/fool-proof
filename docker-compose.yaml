@@ -47,12 +47,16 @@ services:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
+      SPRING_REDIS_PORT: ${SPRING_REDIS_PORT}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
       SPRING_FRONTEND_URL: ${SPRING_FRONTEND_URL}
       SPRING_JWT_SECRET: ${SPRING_JWT_SECRET} 
     ports:
       - "8080:8080"
     depends_on:
       - database
+      - redis
     develop:
       watch:
         - action: sync
@@ -60,7 +64,7 @@ services:
           target: /server/src
         - action: rebuild
           path: ./server/build.gradle
-  # Docker container run configuration for database
+  # Docker container run configuration for mysql database
   database:
     image: mysql:8.0
     container_name: fool-proof-db
@@ -71,7 +75,16 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
-    # volumes:
-    #   - ./database/var/lib/mysql:/var/lib/mysql
+  # Docker container run configuration for redis database
+  redis:
+    image: redis:6.2
+    container_name: fool-proof-rdb
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--requirepass", "$REDIS_PASSWORD"]
+    
+
           
 

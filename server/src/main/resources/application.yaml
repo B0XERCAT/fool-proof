@@ -9,7 +9,7 @@ spring:
     # Activate live reload tool.
     livereload:
       enabled: true
-  # Set DB driver.
+  # Set MySQL DB driver.
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
