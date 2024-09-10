@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,14 @@ public class ReissueController {
         HttpStatus httpStatus = reissueService.raiseHttpStatus(status);
         
         if (status == ReissueStatus.TOKEN_VALID) {
-            reissueService.onSuccess(response, refresh);
+            Pair<String, Cookie> results = reissueService.onSuccess(refresh);
+            String newAccessToken = results.getFirst();
+            Cookie newRefreshToken = results.getSecond();
+            response.setHeader(
+                "access", 
+                newAccessToken
+            );
+            response.addCookie(newRefreshToken);
         }
         
         return new ResponseEntity<>(

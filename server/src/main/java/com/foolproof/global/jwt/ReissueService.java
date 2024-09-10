@@ -1,5 +1,6 @@
 package com.foolproof.global.jwt;
 
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,27 +33,32 @@ public class ReissueService {
         return ReissueStatus.TOKEN_VALID;
     }
 
-    public void onSuccess(HttpServletResponse response, String refresh) {
+    public Pair<String, Cookie> onSuccess(String refresh) {
+        // Parse username and password from refresh token
         String username = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
-        // Reissue new access token to header
-        response.setHeader(
-            "access",
-            getNewAccessToken(
-                username,
-                role
-            )
+
+        // Create new access token
+        String newAccessToken = getNewAccessToken(
+            username,
+            role
         );
-        // Rotate refresh token to cookie
-        response.addCookie(
-            (Cookie) getNewRefreshToken(
-                username,
-                role,
-                true
-            )
+        
+        // Create new refresh token
+        Cookie newRefreshToken = (Cookie) getNewRefreshToken(
+            username,
+            role,
+            true
         );
+
+        // Delete old refresh token and add new one
         deleteByRefreshToken(refresh);
         addRefreshToken(refresh);
+
+        return Pair.of(
+            newAccessToken,
+            newRefreshToken
+        );
     }
 
     public String getNewAccessToken(String refresh) {
