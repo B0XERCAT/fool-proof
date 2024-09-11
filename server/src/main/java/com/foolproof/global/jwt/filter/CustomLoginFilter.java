@@ -20,11 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter{  
+public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter{  
 
     public final ObjectMapper objectMapper = new ObjectMapper();
 
-    public LoginFilter(
+    public CustomLoginFilter(
         AuthenticationManager authenticationManager, 
         JwtUtil jwtUtil, 
         RefreshTokenRepository refreshTokenRepository

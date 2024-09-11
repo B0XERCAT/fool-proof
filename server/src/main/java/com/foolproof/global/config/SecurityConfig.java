@@ -3,7 +3,8 @@ package com.foolproof.global.config;
 import com.foolproof.global.jwt.JwtUtil;
 import com.foolproof.global.jwt.RefreshTokenRepository;
 import com.foolproof.global.jwt.filter.JwtFilter;
-import com.foolproof.global.jwt.filter.LoginFilter;
+import com.foolproof.global.jwt.filter.CustomLoginFilter;
+import com.foolproof.global.jwt.filter.CustomLogoutFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
@@ -41,9 +43,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(
+        CustomLoginFilter loginFilter = new CustomLoginFilter(
             authenticationManager(authenticationConfiguration),
             jwtUtil,
+            refreshTokenRepository
+        );
+
+        CustomLogoutFilter logoutFilter = new CustomLogoutFilter(
+            jwtUtil, 
             refreshTokenRepository
         );
 
@@ -78,7 +85,12 @@ public class SecurityConfig {
             // Add JWT validation filter
             .addFilterBefore(
                jwtFilter,
-                LoginFilter.class
+                CustomLoginFilter.class
+            )
+            // Add Logout filter
+            .addFilterBefore(
+                logoutFilter,
+                 LogoutFilter.class
             )
             // Authorize by path
             .authorizeHttpRequests(
