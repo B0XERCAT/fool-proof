@@ -11,13 +11,13 @@ spring:
       enabled: true
   # Set MySQL DB driver.
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     # Database settings.
     show-sql: true
     generate-ddl: false
     database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
+    # database-platform: org.hibernate.dialect.MySQLDialect
     # Hibernate settings.
     hibernate:
       # Set `ddl-auto` to `create` when creating new table.

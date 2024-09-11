@@ -9,17 +9,17 @@ const LoginForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("password", password)
         
         const login_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/login";
+        console.log(login_api)
 
         try {
             const response = await fetch(login_api, {
                 method: 'POST',
-                body: formData
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
             });
 
             if (!response.ok) {
@@ -38,16 +38,15 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setError('');
 
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("password", password)
-
         const join_api: string = process.env.NEXT_PUBLIC_BACKEND_API + "/join";
 
         try {
             const response = await fetch(join_api, {
                 method: 'POST',
-                body: formData
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
             });
 
             if (!response.ok) {
