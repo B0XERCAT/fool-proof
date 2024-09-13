@@ -1,0 +1,34 @@
+spring:
+  devtools:
+    # Activate restart tool.
+    restart:
+      enabled: true
+      additional-paths: .
+      # .restart is trigger. If this changes, restart process starts.
+      trigger-file: .restart
+    # Activate live reload tool.
+    livereload:
+      enabled: true
+  # Set MySQL DB driver.
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # Database settings.
+    show-sql: true
+    generate-ddl: false
+    database: mysql
+    # database-platform: org.hibernate.dialect.MySQLDialect
+    # Hibernate settings.
+    hibernate:
+      # Set `ddl-auto` to `create` when creating new table.
+      # Set `ddl-auto` to `update` when updating a table without deleting already existing row. 
+      # Set `ddl-auto` to `create-drop` during test case so that tables are dropped when application ends.
+      # Set `ddl-auto` to `validate` in production stage.
+      # Set `ddl-auto` to `none` for default, that is, none of the above.
+      ddl-auto: update
+      naming:
+        # strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
